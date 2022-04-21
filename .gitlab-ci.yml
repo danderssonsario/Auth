@@ -1,0 +1,66 @@
+image: node:14
+
+# Gitlab has built in templates that we can use for different checks. 
+# This one is documented at https://docs.gitlab.com/ee/user/application_security/secret_detection/
+# and will automaticlly run during the "test"-stage
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+stages:
+  - build
+  - test
+  - review
+  - production
+
+Build system:
+  stage: build
+  
+  script:
+    - echo "Building..."
+    - npm install
+  artifacts:
+    paths:
+      - "node_modules"
+    untracked: false
+    expire_in: 30 days
+
+Code Linting:
+  stage: test
+  
+  script:
+    - echo "Code Linting...."
+    - npm run lint
+
+Integration tests:
+  stage: test
+  
+  script:
+    - echo "Running integration tests..."
+    - npm run test:app
+
+Unit tests:
+  stage: test
+  script:
+    - echo "Running unit tests..."
+    - echo "Running mail service tests..."
+    - npm run test:mail_service
+    - echo "Running user service tests..."
+    - npm run test:user_service
+    - echo "Running user model tests..."
+    - npm run test:User
+
+Deploy to production:
+  stage: production
+
+  image: ruby:latest
+  
+  script:
+    - echo "Deploying to production server"
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
+  
+  rules:
+    # We want to production as a manual step.
+    - when: manual 
