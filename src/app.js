@@ -3,11 +3,10 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import { router } from './routes/router.js'
 import cors from 'cors'
-import dotenv from 'dotenv'
+import 'dotenv/config.js'
 
 export async function initServer() {
   try {
-  dotenv.config()
   const app = express()
   app.use(helmet())
   app.use(cors())
