@@ -27,7 +27,6 @@
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
     "@shelf/jest-mongodb": "^2.2.1",
-    "dotenv": "^16.0.0",
     "env-cmd": "^10.1.0",
     "jest": "^27.5.1",
     "mongodb-memory-server": "^8.4.2",
@@ -38,6 +37,7 @@
   "dependencies": {
     "@lnu/eslint-config": "^1.1.4",
     "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "express": "^4.17.3",
