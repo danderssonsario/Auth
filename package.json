@@ -29,7 +29,6 @@
     "@shelf/jest-mongodb": "^2.2.1",
     "env-cmd": "^10.1.0",
     "jest": "^27.5.1",
-    "mongodb-memory-server": "^8.4.2",
     "nodemon": "^2.0.15",
     "sinon": "^13.0.2",
     "supertest": "^6.2.2"
@@ -46,6 +45,7 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.10",
+    "mongodb-memory-server": "^8.4.2",
     "morgan": "^1.10.0",
     "nodemailer": "^6.7.3",
     "validator": "^13.7.0"
