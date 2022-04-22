@@ -9,7 +9,7 @@
     "preset": "@shelf/jest-mongodb"
   },
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node -r dotenv/config src/server.js",
     "test:app": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js app.test.js --setupFiles dotenv/config --forceExit",
     "test:User": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js User.test.js --setupFiles dotenv/config",
     "test:mail_service": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js mail_service.test.js --setupFiles dotenv/config",
