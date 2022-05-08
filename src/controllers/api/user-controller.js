@@ -8,7 +8,6 @@
 import createError from 'http-errors'
 import userService from '../../libs/user_service/index.js'
 import mail_service from '../../libs/mail_service/index.js'
-import { sendEmail } from '../../libs/mail_service/mail_service.js'
 
 /**
  * Encapsulates a controller.
@@ -25,9 +24,9 @@ export class UserController {
     try {
       const { username, email, password } = req.body
 
-      await userService.createUser(username, email, password)
+      const user = await userService.createUser(username, email, password)
 
-      res.status(201).end()
+      res.status(201).json(user)
     } catch (err) {
       let error = err
 
@@ -50,9 +49,9 @@ export class UserController {
   async login(req, res, next) {
     try {
       const { username, password } = req.body
-      const accessToken = await userService.authenticateUser(username, password)
+      const { user, accessToken } = await userService.authenticateUser(username, password)
 
-      res.status(200).json({ access_token: accessToken })
+      res.status(200).json({ access_token: accessToken, user: user })
     } catch (err) {
       next(createError(401, 'Credentials invalid or not provided.'))
     }

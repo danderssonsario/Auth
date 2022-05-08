@@ -17,7 +17,9 @@ import crypto from 'crypto'
     password: password
   })
 
-  return await user.save()
+  await user.save()
+
+  return user
 }
 
 /**
@@ -59,7 +61,7 @@ import crypto from 'crypto'
   //const buff = Buffer.from(process.env.JWT_SECRET, 'base64')
   //const key = buff.toString('utf-8')
 
-  const accessToken = jwt.sign({}, process.env.JWT_SECRET, {
+  const accessToken = jwt.sign({user:user}, process.env.JWT_SECRET, {
     algorithm: 'RS256',
     expiresIn: process.env.JWT_EXPIRE
   })

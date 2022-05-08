@@ -1,6 +1,7 @@
 import { connectDB, disconnectDB, clearDB } from '../config/mongoose.js'
 import User from '../models/User.js'
 import crypto from 'crypto'
+import { jest } from '@jest/globals'
 
 beforeAll(async () => await connectDB())
 afterEach(async () => await clearDB())
@@ -44,9 +45,9 @@ describe('save a user', () => {
   describe('given correct fields', () => {
     it('should save a user', async () => {
       const user = new User(userData)
-      await user.save()
+      const saved = await user.save()
 
-      expect(user).toBeDefined()
+      expect(saved).toBeDefined()
     })
 
     it('should hashpassword upon save', async () => {

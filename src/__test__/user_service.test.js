@@ -1,5 +1,5 @@
 import userService from '../libs/user_service/user_service.js'
-import { jest } from '@jest/globals'
+import { expect, jest } from '@jest/globals'
 import Sinon from 'sinon'
 import mongoose from 'mongoose'
 import crypto from 'crypto'
@@ -32,8 +32,11 @@ describe('creating a user', () => {
     }
     const user_service = userService(MockModel)
 
-    user_service.createUser(username, email, password)
+    user_service.createUser('username', 'email@email.com', 'password')
 
+    expect(username).toEqual('username')
+    expect(email).toEqual('email@email.com')
+    expect(password).toEqual('password')
     expect(save.calledOnce).toBe(true)
   })
 })

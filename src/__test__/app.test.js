@@ -2,11 +2,7 @@ import request from 'supertest'
 import { server } from '../server.js'
 import { disconnectDB, clearDB } from '../config/mongoose.js'
 import User from '../models/User.js'
-import dotenv from 'dotenv'
 
-beforeAll(() => {
-  dotenv.config()
-})
 afterEach(async () => await clearDB())
 afterAll(async () => {
   await disconnectDB()
@@ -70,7 +66,6 @@ describe('POST /register', () => {
       expect(res.statusCode).toBe(409)
     })
   })
-
 })
 
 describe('POST /login', () => {
