@@ -66,7 +66,7 @@ import crypto from 'crypto'
     expiresIn: process.env.JWT_EXPIRE
   })
 
-  return accessToken
+  return {accessToken: accessToken, user: user }
 }
 
 /**
