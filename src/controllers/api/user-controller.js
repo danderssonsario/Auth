@@ -74,14 +74,12 @@ export class UserController {
    * @param {Function} next - Next middleware function.
    */
   async resetPassword(req, res, next) {
-    const { email } = req.body
+    const { email, resetUrl } = req.body
 
     try {
       const { user, resetToken } = await userService.setResetToken(email)
 
-      const resetUrl = new URL(
-        `${req.protocol}://${req.get('host')}${req.baseUrl}/newpass/${resetToken}`
-      )
+      const url = new URL(`${resetUrl}/${resetToken}`)
 
       const message = `
           <body style="background-color: #ffffff; font-size: 16px;">
@@ -93,12 +91,12 @@ export class UserController {
                En förfrågan om att återställa lösenordet på ditt konto har kommit in. Tryck på återställningslänken för att välja ett nytt lösenord.
               </p>
               <p>
-                <a target="_blank" style="text-decoration:none; background-color: black; border: black 1px solid; color: #fff; padding:10px 10px; display:block;" href="${resetUrl}">
+                <a target="_blank" style="text-decoration:none; background-color: black; border: black 1px solid; color: #fff; padding:10px 10px; display:block;" href="${url}">
                   <strong>Reset Password</strong></a>
               </p>
               <p style="text-align:left">Denna länk kan bara användas en gång och är giltig i 15 minuter. Ny förfrågan måste göras om länk förbrukas/går ut.<br><br>Bortse från detta mail om du inte gjort förfrågan.</p>
               <p style="text-align:left">
-              Med vänlig hälsning,<br> Speedbill
+              Med vänlig hälsning,<br> Binvoice
               </p>
             </td>
           </tr>
@@ -107,16 +105,15 @@ export class UserController {
     </center>
   </body>
       `
- 
+  
       await mail_service.sendEmail({
         receiver: email,
-        subject: 'Återställning lösenord Speedbill',
+        subject: 'Återställning lösenord Binvoice',
         body: message
       })
 
       res.status(200).json({ message: 'Email sent successfully.'})
     } catch (err) {
-      console.log(err)
       next(err)
     }
   }

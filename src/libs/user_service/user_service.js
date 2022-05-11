@@ -4,13 +4,13 @@ import crypto from 'crypto'
 
 /**
  * Creates a user and stores to database.
- * 
+ *
  * @param {string} username - Username.
  * @param {string} email - Email.
  * @param {string} password - Password.
- * @returns 
+ * @returns
  */
- const createUser = User => async (username, email, password) => {
+const createUser = (User) => async (username, email, password) => {
   const user = new User({
     username: username,
     email: email,
@@ -24,11 +24,11 @@ import crypto from 'crypto'
 
 /**
  * Reset token handler.
- * 
- * @param {String} email - User's email. 
- * @returns 
+ *
+ * @param {String} email - User's email.
+ * @returns
  */
- const setResetToken = User => async (email) => {
+const setResetToken = (User) => async (email) => {
   const user = await User.findOne({ email })
 
   if (!user) {
@@ -37,26 +37,26 @@ import crypto from 'crypto'
 
   const resetToken = await User.generateResetToken(user)
 
-    if (User.save._isMockFunction) {
-      await User.save(user)
-    } else {
-      await user.save()
-    }
-    
-  return {user: user, resetToken: resetToken}
+  if (User.save._isMockFunction) {
+    await User.save(user)
+  } else {
+    await user.save()
+  }
+
+  return { user: user, resetToken: resetToken }
 }
 
 /**
  * Authentication handler.
- * 
+ *
  * @param {string} username - Username.
  * @param {string} password - Password.
- * @returns 
+ * @returns
  */
- const authenticateUser = User => async (username, password) => {
+const authenticateUser = (User) => async (username, password) => {
   const user = await User.findOne({ username })
-  
-  if(!user) {
+
+  if (!user) {
     throw new Error()
   }
 
@@ -65,22 +65,22 @@ import crypto from 'crypto'
   //const buff = Buffer.from(process.env.JWT_SECRET, 'base64')
   //const key = buff.toString('utf-8')
 
-  const accessToken = jwt.sign({user:user}, process.env.JWT_SECRET, {
+  const accessToken = jwt.sign({ user: user }, process.env.JWT_SECRET, {
     algorithm: 'RS256',
     expiresIn: process.env.JWT_EXPIRE
   })
 
-  return {accessToken: accessToken, user: user }
+  return { accessToken: accessToken, user: user }
 }
 
 /**
  * Sets new password.
- * 
+ *
  * @param {String} token - The reset token.
  * @param {String} password - The new password
- * @returns 
+ * @returns
  */
- const setNewPassword = User => async (token, password) => {
+const setNewPassword = (User) => async (token, password) => {
   const resetToken = crypto.createHash('sha256').update(token).digest('hex')
 
   const user = await User.findOne({ resetToken })
@@ -92,7 +92,7 @@ import crypto from 'crypto'
   user.resetToken = undefined
   user.expireToken = undefined
 
-  if(User.save._isMockFunction) {
+  if (User.save._isMockFunction) {
     await User.save(user)
   } else {
     await user.save()
@@ -100,7 +100,7 @@ import crypto from 'crypto'
   return
 }
 
- const userService = (User) => {
+const userService = (User) => {
   return {
     createUser: createUser(User),
     setResetToken: setResetToken(User),
