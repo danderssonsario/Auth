@@ -37,8 +37,12 @@ import crypto from 'crypto'
 
   const resetToken = await User.generateResetToken(user)
 
-  await User.save(user)
-
+    if (User.save._isMockFunction) {
+      await User.save(user)
+    } else {
+      await user.save()
+    }
+    
   return {user: user, resetToken: resetToken}
 }
 

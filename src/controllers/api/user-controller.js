@@ -116,6 +116,7 @@ export class UserController {
 
       res.status(200).json({ message: 'Email sent successfully.'})
     } catch (err) {
+      console.log(err)
       next(err)
     }
   }
