@@ -9,13 +9,12 @@ afterAll(async () => {
 })
 
 const registerInput = {
-  username: 'username',
   email: 'email@email.com',
   password: 'password'
 }
 
 const loginInput = {
-  username: 'username',
+  email: 'email@email.com',
   password: 'password'
 }
 
@@ -30,7 +29,7 @@ const app = server
 
 // register a user
 describe('POST /register', () => {
-  describe('given a username, email, and password', () => {
+  describe('given an email and a password', () => {
 
     it('should respond with statuscode 201', async () => {
       const res = await request(app).post('/register').send(registerInput)
@@ -41,11 +40,8 @@ describe('POST /register', () => {
   describe('when credential(s) is missing', () => {
     it('should respond with statuscode 400.', async () => {
       const inputData = [
-        { username: 'username' },
         { password: 'password' },
         { email: 'email@email.com' },
-        { username: 'username', password: 'password' },
-        { username: 'username', email: 'email@email.com' },
         { password: 'password', email: 'email@email.com' },
         {}
       ]
@@ -85,8 +81,8 @@ describe('POST /login', () => {
       await user.save()
 
       const testInput = [
-        { username: 'username', password: 'password1' },
-        { username: 'username1', password: 'password' },
+        { email: 'email@email.com', password: 'password1' },
+        { email: 'email1@email.com', password: 'password' },
         {}
       ]
 

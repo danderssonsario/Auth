@@ -9,7 +9,6 @@ afterEach(() => jest.clearAllMocks())
 const mockUser = {
   _id: new mongoose.Types.ObjectId().toString(),
   email: 'da222xg@student.lnu.se',
-  username: 'daniel',
   password: '$2b$10$JI2EVOBFQtsPDdcec5xFoOvWaqLW.OJzFuJsfjmu1OlkolleBK84a',
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -21,10 +20,10 @@ const mockUser = {
 describe('creating a user', () => {
   it('should be saved to a database', () => {
     const save = Sinon.spy()
-    let username, email, password
+    let email, password
 
     const MockModel = function (data) {
-      (username = data.username), (email = data.email), (password = data.password)
+      (email = data.email), (password = data.password)
       return {
         ...data,
         save
@@ -32,9 +31,8 @@ describe('creating a user', () => {
     }
     const user_service = userService(MockModel)
 
-    user_service.createUser('username', 'email@email.com', 'password')
+    user_service.createUser('email@email.com', 'password')
 
-    expect(username).toEqual('username')
     expect(email).toEqual('email@email.com')
     expect(password).toEqual('password')
     expect(save.calledOnce).toBe(true)
@@ -44,7 +42,7 @@ describe('creating a user', () => {
 describe('authenticating a user', () => {
   it('should return an access token', async () => {
     const mockModel = {
-      findOne: jest.fn(({ username }) => {
+      findOne: jest.fn(({ email }) => {
         return mockUser
       }),
       checkPassword: jest.fn(async (user, password) => {
@@ -53,11 +51,11 @@ describe('authenticating a user', () => {
     }
 
     const user_service = userService(mockModel)
-    const resetToken = await user_service.authenticateUser(mockUser.username, mockUser.password)
+    const resetToken = await user_service.authenticateUser(mockUser.email, mockUser.password)
 
     expect(resetToken).toBeDefined()
     expect(mockModel.findOne).toHaveBeenCalledTimes(1)
-    expect(mockModel.findOne).toHaveBeenCalledWith({ username: mockUser.username })
+    expect(mockModel.findOne).toHaveBeenCalledWith({ email: mockUser.email })
     expect(mockModel.checkPassword).toHaveBeenCalledTimes(1)
     expect(mockModel.checkPassword).toHaveBeenCalledWith(mockUser, mockUser.password)
   })

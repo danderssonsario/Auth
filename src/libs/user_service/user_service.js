@@ -5,14 +5,12 @@ import crypto from 'crypto'
 /**
  * Creates a user and stores to database.
  *
- * @param {string} username - Username.
  * @param {string} email - Email.
  * @param {string} password - Password.
  * @returns
  */
-const createUser = (User) => async (username, email, password) => {
+const createUser = (User) => async (email, password) => {
   const user = new User({
-    username: username,
     email: email,
     password: password
   })
@@ -49,12 +47,12 @@ const setResetToken = (User) => async (email) => {
 /**
  * Authentication handler.
  *
- * @param {string} username - Username.
+ * @param {string} email - email.
  * @param {string} password - Password.
  * @returns
  */
-const authenticateUser = (User) => async (username, password) => {
-  const user = await User.findOne({ username })
+const authenticateUser = (User) => async (email, password) => {
+  const user = await User.findOne({ email })
 
   if (!user) {
     throw new Error()

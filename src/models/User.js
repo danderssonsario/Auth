@@ -23,12 +23,6 @@ const schema = new mongoose.Schema(
       unique: true,
       trim: true
     },
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
     password: {
       type: String,
       minlength: 1,

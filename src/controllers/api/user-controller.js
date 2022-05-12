@@ -22,13 +22,12 @@ export class UserController {
    */
   async register(req, res, next) {
     try {
-      const { username, email, password } = req.body
+      const { email, password } = req.body
 
-      const user = await userService.createUser(username, email, password)
+      const user = await userService.createUser(email, password)
 
       res.status(201).json({
         id: user.id,
-        username: user.username,
         email: user.email
       })
     } catch (err) {
@@ -52,13 +51,12 @@ export class UserController {
    */
   async login(req, res, next) {
     try {
-      const { username, password } = req.body
-      const { user, accessToken } = await userService.authenticateUser(username, password)
+      const { email, password } = req.body
+      const { user, accessToken } = await userService.authenticateUser(email, password)
 
       res.status(200).json({
         access_token: accessToken,
         id: user.id,
-        username: user.username,
         email: user.email
       })
     } catch (err) {
@@ -77,7 +75,7 @@ export class UserController {
     const { email, resetUrl } = req.body
 
     try {
-      const { user, resetToken } = await userService.setResetToken(email)
+      const { resetToken } = await userService.setResetToken(email)
 
       const url = new URL(`${resetUrl}/${resetToken}`)
 
@@ -87,8 +85,8 @@ export class UserController {
       <table align="center" border="0" cellpadding="0" cellspacing="0" style="height:100%; width:600px;">
           <tr>
             <td align="center" bgcolor="#ffffff" style="padding:30px">
-               <p style="text-align:left">Hej ${user.username},<br><br>
-               En förfrågan om att återställa lösenordet på ditt konto har kommit in. Tryck på återställningslänken för att välja ett nytt lösenord.
+               <p style="text-align:left">Hej!<br><br>
+               En förfrågan om att återställa lösenordet på ditt Binvoice-konto har kommit in. Tryck på återställningslänken för att välja ett nytt lösenord.
               </p>
               <p>
                 <a target="_blank" style="text-decoration:none; background-color: black; border: black 1px solid; color: #fff; padding:10px 10px; display:block;" href="${url}">

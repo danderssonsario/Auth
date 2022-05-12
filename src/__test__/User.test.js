@@ -10,7 +10,6 @@ afterAll(async () => {
 })
 
 const userData = {
-  username: 'username',
   email: 'email@email.com',
   password: 'password'
 }
@@ -35,7 +34,7 @@ describe('get a user', () => {
     const user = new User(userData)
     await user.save()
 
-    const foundUser = await User.findOne({ username: user.username })
+    const foundUser = await User.findOne({ email: user.email })
     expect(foundUser).toBeDefined()
     expect(foundUser).toBeInstanceOf(User)
   })
@@ -62,9 +61,8 @@ describe('save a user', () => {
   })
     describe('given a field is missing', () => {
       it('throw an error', async () => {
-        const incompleteUser = {
-          username: 'username'
-        }
+        const incompleteUser = {}
+        
         const user = new User(incompleteUser)
         expect(async () => {
           await user.save()
