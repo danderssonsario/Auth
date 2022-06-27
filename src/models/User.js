@@ -2,7 +2,7 @@
  * User mongoose model.
  *
  * @author Daniel Andersson
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import bcrypt from 'bcrypt'
@@ -108,7 +108,7 @@ schema.statics.generateResetToken = function (user) {
 
     user.resetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
 
-    user.expireToken = Date.now() + (60 * 60 * 1000)
+    user.expireToken = Date.now() + (60 * 10000)
 
     return resetToken
 }

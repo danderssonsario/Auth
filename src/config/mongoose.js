@@ -2,7 +2,7 @@
  * Mongoose configuration module.
  *
  * @author Daniel Andersson
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import mongoose from 'mongoose'

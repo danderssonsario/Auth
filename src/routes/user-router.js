@@ -2,7 +2,7 @@
  * Account routes.
  *
  * @author Daniel Andersson
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import express from 'express'
@@ -19,3 +19,5 @@ router.post('/login', (req, res, next) => controller.login(req, res, next))
 router.post('/reset', (req, res , next) => controller.resetPassword(req, res, next))
 
 router.post('/newpass/:resetToken', (req, res, next) => controller.newPassword(req, res, next))
+
+router.post('/refresh', (req, res, next) => controller.refreshJWT(req, res, next))

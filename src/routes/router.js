@@ -2,7 +2,7 @@
  * Routes of this application.
  *
  * @author Daniel Andersson
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import express from 'express'
@@ -14,7 +14,7 @@ export const router = express.Router()
 router.use('/', userRouter)
 
 router.get('/', (req, res, next) => {
-    res.json({message: 'This is the root of the API.'})
+  res.json({ message: 'This is the root of the API.' })
 })
 
 // Any other route

@@ -66,12 +66,13 @@ describe('POST /register', () => {
 
 describe('POST /login', () => {
   describe('given correct credentials', () => {
-    it('should respond with a json object containing an access token', async () => {
+    it('should respond with a json object containing an access token and refresh token', async () => {
       const user = new User(registerInput)
       await user.save()
       const { statusCode, body } = await request(app).post('/login').send(loginInput)
       expect(statusCode).toBe(200)
-      expect(body.access_token).toBeDefined()
+      expect(body.accessToken).toBeDefined()
+      expect(body.refreshToken).toBeDefined()
     })
   })
 
@@ -145,6 +146,32 @@ describe('POST /newpass/:id', () => {
 
       expect(statusCode).toBe(400)
       expect(body.message).toBe('Invalid reset token.')
+    })
+  })
+})
+
+describe('POST /refresh', () => {
+  describe('Given a valid refresh token', () => {
+    it('should respond with statuscode 200 and new access token along with the refresh token', async () => {
+     const user = new User(registerInput)
+     await user.save()
+     const res = await request(app).post('/login').send(loginInput)
+
+     let { statusCode, body } = await request(app).post('/refresh').send({refreshToken: res.body.refreshToken})
+
+     console.log(statusCode)
+
+      expect(statusCode).toBe(200)
+      expect(body.refreshToken).toBe(body.refreshToken)
+      expect(body.accessToken).toBeDefined()
+    })
+  })
+
+  describe('when invalid refresh token', () => {
+    it('should respond with statuscode 403', async () => {
+      const { statusCode } = await request(app).post('/refresh').send('invalidtoken')
+
+      expect(statusCode).toBe(403)
     })
   })
 })

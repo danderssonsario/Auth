@@ -62,13 +62,21 @@ const authenticateUser = (User) => async (email, password) => {
 
   //const buff = Buffer.from(process.env.JWT_SECRET, 'base64')
   //const key = buff.toString('utf-8')
+  const payload = {
+  email: user.email, id: user.id
+  }
 
-  const accessToken = jwt.sign({ user: user }, process.env.JWT_SECRET, {
+  const accessToken = jwt.sign({user: payload}, process.env.JWT_SECRET, {
     algorithm: 'RS256',
     expiresIn: process.env.JWT_EXPIRE
   })
 
-  return { accessToken: accessToken, user: user }
+  const refreshToken = jwt.sign({user: payload}, process.env.JWT_SECRET_2, {
+    algorithm: 'RS256',
+    expiresIn: process.env.JWT_EXPIRE_2
+  })
+
+  return { accessToken, refreshToken }
 }
 
 /**
@@ -98,12 +106,35 @@ const setNewPassword = (User) => async (token, password) => {
   return
 }
 
+/**
+ * Sets new JWT.
+ *
+ * @param {String} token - The reset token.
+ * @param {String} password - The new password
+ * @returns
+ */
+const setNewJWT = () => (refreshToken) => {
+
+  let accessToken
+  jwt.verify(refreshToken, process.env.JWT_PUBLIC_KEY, (err, payload) => {
+  if (err) throw createError(403)
+
+  accessToken = jwt.sign({ user: payload.user }, process.env.JWT_SECRET, {
+    algorithm: 'RS256',
+    expiresIn: process.env.JWT_EXPIRE
+  })
+
+  })
+  return accessToken
+}
+
 const userService = (User) => {
   return {
     createUser: createUser(User),
     setResetToken: setResetToken(User),
     authenticateUser: authenticateUser(User),
-    setNewPassword: setNewPassword(User)
+    setNewPassword: setNewPassword(User),
+    setNewJWT: setNewJWT()
   }
 }
 export default userService

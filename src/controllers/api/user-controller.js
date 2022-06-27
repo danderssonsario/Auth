@@ -2,7 +2,7 @@
  * AccountController module.
  *
  * @author Daniel Andersson
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import createError from 'http-errors'
@@ -52,12 +52,14 @@ export class UserController {
   async login(req, res, next) {
     try {
       const { email, password } = req.body
-      const { user, accessToken } = await userService.authenticateUser(email, password)
+      const { accessToken, refreshToken } = await userService.authenticateUser(
+        email,
+        password
+      )
 
       res.status(200).json({
-        access_token: accessToken,
-        id: user.id,
-        email: user.email
+        accessToken,
+        refreshToken
       })
     } catch (err) {
       next(createError(401, 'Credentials invalid or not provided.'))
@@ -66,7 +68,7 @@ export class UserController {
 
   /**
    * Validates user token and sends reset link.
-   * 
+   *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    * @param {Function} next - Next middleware function.
@@ -103,37 +105,55 @@ export class UserController {
     </center>
   </body>
       `
-  
+
       await mail_service.sendEmail({
         receiver: email,
         subject: 'Återställning lösenord Binvoice',
         body: message
       })
 
-      res.status(200).json({ message: 'Email sent successfully.'})
+      res.status(200).json({ message: 'Email sent successfully.' })
     } catch (err) {
       next(err)
     }
   }
 
-
   /**
    * Sets the new password.
-   * 
+   *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    * @param {Function} next - Next middleware function.
    */
   async newPassword(req, res, next) {
-
     const { password } = req.body
     const token = req.params.resetToken
 
     try {
       await userService.setNewPassword(token, password)
 
-      res.status(200).json({ message: 'Password set successfully.'})
+      res.status(200).json({ message: 'Password set successfully.' })
     } catch (err) {
+      next(err)
+    }
+  }
+
+  /**
+   * Refreshes JWTs.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Next middleware function.
+   */
+  async refreshJWT(req, res, next) {
+    const { refreshToken } = req.body
+
+    try {
+      const newToken = userService.setNewJWT(refreshToken)
+
+      res.status(200).json({ refreshToken: refreshToken, accessToken: newToken })
+    } catch (err) {
+      console.log(err)
       next(err)
     }
   }
