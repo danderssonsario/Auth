@@ -153,7 +153,6 @@ export class UserController {
 
       res.status(200).json({ refreshToken: refreshToken, accessToken: newToken })
     } catch (err) {
-      console.log(err)
       next(err)
     }
   }
