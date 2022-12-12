@@ -1,7 +1,7 @@
 # Authentication Service
-Självstående server-del som hanterar autentisering.
+Server application that handles authentication/authorization.
 
-## Urval av tekniker.
+## Some techniques/key concepts used.
 * REST API
 * Express js
 * MongoDB / Mongoose
@@ -9,16 +9,16 @@ Självstående server-del som hanterar autentisering.
 * jsonwebtoken
 * Jest
 
-## Script
-### npm run start 
-Kör igång applikationen i node.js
-### npm run dev 
-Kör igång applikationen i node.js med nodemon.
-### npm run test:app 
-Kör tester från app.test.js
-### npm run test:User  
-Kör tester från User.test.js
-### npm run test:user_service 
-Kör tester från user_service.test.js
-### npm run test:mail_service 
+## Scripts
+<code> npm run start </code>
+Runs node app. 
+<code> npm run dev </code>
+Runs dev with nodemon
+<code> npm run test:app </code>
+runs tests in app.test.js
+<code> npm run test:User  </code>
+runs tests in User.test.js
+<code> npm run test:user_service </code>
+runs tests in user_service.test.js
+<code> npm run test:mail_service </code>
 Kör tester från mail_service.test.js
